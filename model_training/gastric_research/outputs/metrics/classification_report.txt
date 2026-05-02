@@ -1,0 +1,8 @@
+                        precision    recall  f1-score   support
+
+      Class 0 (Normal)       0.99      0.99      0.99       200
+Class 1 (Inflammation)       0.98      0.98      0.98       124
+
+              accuracy                           0.99       324
+             macro avg       0.99      0.99      0.99       324
+          weighted avg       0.99      0.99      0.99       324
