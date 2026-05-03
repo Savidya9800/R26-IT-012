@@ -1,0 +1,11 @@
+# Gastric Model Requirements
+torch
+torchvision
+timm
+albumentations
+opencv-python
+scikit-learn
+matplotlib
+seaborn
+tqdm
+ipywidgets
