@@ -40,7 +40,7 @@ class GastricModel:
         ])
 
         # 3. Setup Grad-CAM (keep same)
-        target_layers = [self.model.features[-1]]
+        target_layers = [self.model.blocks[-1]]  # For EfficientNet in timm
         self.cam = GradCAM(model=self.model, target_layers=target_layers)
 
     def predict(self, image_bytes: bytes):
