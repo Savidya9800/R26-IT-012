@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
+import { login } from "../services/authApi"
+import { useAuth } from '../contexts/AuthContext'
 
 type UserRole = "Clinician" | "Student" | "Admin"
 
@@ -22,12 +24,9 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      console.log("Login attempt:", {
-        email,
-        password,
-        role: selectedRole,
-        rememberMe,
-      })
+      await login(email, password)
+      // Redirect to dashboard (you'll need to set up routing)
+      window.location.href = '/dashboard'
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed")
     } finally {
