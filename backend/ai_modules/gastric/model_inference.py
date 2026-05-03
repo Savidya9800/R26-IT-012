@@ -10,6 +10,7 @@ import base64
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from pytorch_grad_cam.utils.image import show_cam_on_image
+import timm
 
 GASTRIC_CLASSES = ['Normal', 'Inflammation']
 
@@ -19,10 +20,8 @@ class GastricModel:
     def __init__(self):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         
-        # 1. Initialize Model
-        self.model = models.efficientnet_b4(weights=None)
-        num_ftrs = self.model.classifier[1].in_features
-        self.model.classifier[1] = torch.nn.Linear(num_ftrs, len(GASTRIC_CLASSES))
+        # 1. Initialize Model - Use TIMM like training code
+        self.model = timm.create_model('efficientnet_b4', pretrained=False, num_classes=len(GASTRIC_CLASSES))
         
         try:
             self.model.load_state_dict(torch.load(MODEL_PATH, map_location=self.device))
@@ -31,17 +30,17 @@ class GastricModel:
             print("Gastric EfficientNet-B4 model loaded successfully.")
         except Exception as e:
             print(f"Error loading model: {e}")
+            raise
 
-        # 2. Setup Transform
+        # 2. Setup Transform (keep same)
         self.transform = transforms.Compose([
             transforms.Resize((380, 380)),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
 
-        # 3. Setup Grad-CAM
-        # Target the last convolutional layer of EfficientNet
-        target_layers = [self.model.features[-1]]
+        # 3. Setup Grad-CAM (keep same)
+        target_layers = [self.model.blocks[-1]]  # For EfficientNet in timm
         self.cam = GradCAM(model=self.model, target_layers=target_layers)
 
     def predict(self, image_bytes: bytes):
